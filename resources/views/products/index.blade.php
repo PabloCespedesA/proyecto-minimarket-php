@@ -34,7 +34,8 @@
                         <td>{{ $product->location }}</td>
                         <td>{{ $product->expiration_date}}</td>
                         <td>
-                            <img src="{{ asset('storage/images/' . $product->image_path) }}" alt="{{ $product->name }}" width="50" height="50">
+                            <img src="{{ asset('storage/'.$product->image_path) }}" alt="{{ $product->name }}" width="50" height="50">
+
 
                         </td>
                         <td>

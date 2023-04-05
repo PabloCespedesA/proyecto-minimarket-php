@@ -25,12 +25,16 @@ class ProductController extends Controller
             'name' => 'required',
             'price' => 'required|numeric',
             'stock' => 'required|integer',
-            'expiration_date' => 'required|date',
             'product_type' => 'required',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
-    
-        $imagePath = $request->file('image')->store('images', 'public');
+
+        $expiration_date = $request->input('expiration_date', null);
+
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('images', 'public');
+        }
     
         $product = new Product([
             'name' => $request->input('name'),
@@ -38,7 +42,7 @@ class ProductController extends Controller
             'price' => $request->input('price'),
             'stock' => $request->input('stock'),
             'location' => $request->input('location', null), // Agregamos el valor por defecto
-            'expiration_date' => $request->input('expiration_date'),
+            'expiration_date' => $expiration_date,
             'product_type' => $request->input('product_type'),
             'image_path' => $imagePath, 
         ]);
@@ -66,7 +70,6 @@ class ProductController extends Controller
             'name' => 'required',
             'price' => 'required|numeric',
             'stock' => 'required|integer',
-            'expiration_date' => 'required|date',
         ]);
 
         $product = Product::findOrFail($id);
@@ -76,7 +79,12 @@ class ProductController extends Controller
         $product->price = $request->input('price');
         $product->stock = $request->input('stock');
         $product->location = $request->input('location', null); // Agregamos el valor por defecto
-        $product->expiration_date = $request->input('expiration_date');
+        $product->expiration_date = $request->input('expiration_date', null);
+
+        if ($request->hasFile('image')) {
+            Storage::delete($product->image_path);
+            $product->image_path = $request->file('image')->store('images', 'public');
+        }
 
         $product->save();
 

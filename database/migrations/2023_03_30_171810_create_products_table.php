@@ -21,7 +21,7 @@ class CreateProductsTable extends Migration
             $table->decimal('price', 8, 2);
             $table->integer('stock');
             $table->string('location');
-            $table->date('expiration_date');
+            $table->date('expiration_date')->nullable();
             $table->string('image_path')->nullable();
             $table->timestamps();
         });
